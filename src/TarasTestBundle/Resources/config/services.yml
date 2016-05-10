@@ -1,0 +1,4 @@
+services:
+#    taras_test.example:
+#        class: TarasTestBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
