@@ -1,1 +1,11 @@
-
+{
+    "name": "t.sarana/sym_new_proj",
+    "description": "My start project",
+    "authors": [
+        {
+            "name": "Taras Sarana",
+            "email": "gekatonheyr@ukr.net"
+        }
+    ],
+    "require": {}
+}
