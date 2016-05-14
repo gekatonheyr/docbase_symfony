@@ -24,30 +24,52 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="soname", type="string", length=255)
-     */
-    private $soname;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="login", type="string", length=255)
+     * @ORM\Column(name="login", type="string", length=20, unique=true)
      */
     private $login;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="pass", type="string", length=255)
+     * @ORM\Column(name="password_hash", type="string", length=40)
      */
-    private $pass;
+    private $passwordHash;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="employee_id", type="integer")
+     */
+    private $employeeId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="group_id", type="integer")
+     */
+    private $groupId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="groups_id", type="integer", nullable=true)
+     */
+    private $groupsId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="salt", type="integer", nullable=true)
+     */
+    private $salt;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="access_id", type="integer", nullable=false)
+     */
+    private $accessId;
+
 
     /**
      * Get id
@@ -60,46 +82,22 @@ class User
     }
 
     /**
-     * Set name
+     * Set login
      *
-     * @param string $name
+     * @param string $login
      *
      * @return User
      */
-    public function setName($name)
+    public function setLogin($login)
     {
-        $this->name = $name;
+        $this->login = $login;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get login
      *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSoname()
-    {
-        return $this->soname;
-    }
-
-    /**
-     * @param string $soname
-     */
-    public function setSoname($soname)
-    {
-        $this->soname = $soname;
-    }
-
-    /**
      * @return string
      */
     public function getLogin()
@@ -108,26 +106,154 @@ class User
     }
 
     /**
-     * @param string $login
+     * Set passwordHash
+     *
+     * @param string $passwordHash
+     *
+     * @return User
      */
-    public function setLogin($login)
+    public function setPasswordHash($passwordHash)
     {
-        $this->login = $login;
+        $this->passwordHash = $passwordHash;
+
+        return $this;
     }
 
     /**
+     * Get passwordHash
+     *
      * @return string
      */
-    public function getPass()
+    public function getPasswordHash()
     {
-        return $this->pass;
+        return $this->passwordHash;
     }
 
     /**
-     * @param string $pass
+     * Set employeeId
+     *
+     * @param integer $employeeId
+     *
+     * @return User
      */
-    public function setPass($pass)
+    public function setEmployeeId($employeeId)
     {
-        $this->pass = $pass;
+        $this->employeeId = $employeeId;
+
+        return $this;
+    }
+
+    /**
+     * Get employeeId
+     *
+     * @return int
+     */
+    public function getEmployeeId()
+    {
+        return $this->employeeId;
+    }
+
+    /**
+     * Set groupId
+     *
+     * @param integer $groupId
+     *
+     * @return User
+     */
+    public function setGroupId($groupId)
+    {
+        $this->groupId = $groupId;
+
+        return $this;
+    }
+
+    /**
+     * Get groupId
+     *
+     * @return int
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * Set groupsId
+     *
+     * @param integer $groupsId
+     *
+     * @return User
+     */
+    public function setGroupsId($groupsId)
+    {
+        $this->groupsId = $groupsId;
+
+        return $this;
+    }
+
+    /**
+     * Get groupsId
+     *
+     * @return int
+     */
+    public function getGroupsId()
+    {
+        return $this->groupsId;
+    }
+
+    /**
+     * Set salt
+     *
+     * @param integer $salt
+     *
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Get salt
+     *
+     * @return int
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set accessId
+     *
+     * @param integer $accessId
+     *
+     * @return User
+     */
+    public function setAccessId($accessId)
+    {
+        $this->accessId = $accessId;
+
+        return $this;
+    }
+
+    /**
+     * Get accessId
+     *
+     * @return integer
+     */
+    public function getAccessId()
+    {
+        return $this->accessId;
+    }
+
+    public function generateSalt($em)
+    {
+        $salt = rand();
+        $this->setSalt($salt);
+        $em->flush();
+        return $salt;
     }
 }
