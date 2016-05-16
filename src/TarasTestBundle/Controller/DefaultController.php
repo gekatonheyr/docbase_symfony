@@ -21,7 +21,9 @@ class DefaultController extends Controller
         $response =  new Response();
 
         $form = $this->createFormBuilder($user, array(
-            'attr'=>array('onsubmit'=>'login(document.getElementById(\'form_login\').value)')
+            'attr'=>array(
+                'id'=>'login_form',
+                'onsubmit'=>'login(document.getElementById(\'form_login\').value)')
         ))
             ->add("login", TextType::class, array('label' => 'Enter your login please '))
             ->add("passwordHash", TextType::class)
@@ -29,10 +31,11 @@ class DefaultController extends Controller
             ->getForm();
 
         $form->handleRequest($request);
-        $login = $request->request->get('login');
-        $pass = $request->request->get('pass');
+        $data = $form->getData();
+        $login = $request->request->get('login') ? $request->request->get('login') : $data->getLogin();
+        $pass = $request->request->get('passwordHash') ? $request->request->get('passwordHash') : $data->getPasswordHash();
         if(!$login && !$pass){
-            return $this->render('TarasTestBundle:Default:login.html.twig', array('form' => $form->createView(),));
+            return $this->render('TarasTestBundle:Default:login.html.twig', array('login_form' => $form->createView(),));
         }else if($login && !$pass){
             $user_em =$this->getDoctrine()->getManager();
             $user_repo = $user_em->getRepository('TarasTestBundle:User');
@@ -44,8 +47,17 @@ class DefaultController extends Controller
             }
         }else if($login && $pass){
             if ($form->isSubmitted() && $form->isValid()) {
-                return $this->render('TarasTestBundle:Default:index.html.twig', array('login' => $user->getLogin(),
-                    'passwordHash' => $user->getPasswordHash(),));
+                $user_em =$this->getDoctrine()->getManager();
+                $user_repo = $user_em->getRepository('TarasTestBundle:User');
+                $tmp_user = $user_repo->findOneBy(array('login' => $login));
+                if($tmp_user && $pass === sha1($tmp_user->getPasswordHash().sha1($tmp_user->getSalt()))) {
+                    return $this->render('TarasTestBundle:Default:index.html.twig', array('login' => $user->getLogin(),
+                        'passwordHash' => $user->getPasswordHash(),));
+                }else{
+                    //$form->addError('You have entered wrong data!');
+                    return $this->render('TarasTestBundle:Default:login.html.twig', array('login_form' => $form->createView(),
+                                                                                            ));
+                }
             }
         }
     }

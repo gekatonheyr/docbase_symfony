@@ -1,10 +1,10 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+    {{ form_start(login_form) }}
+    {{ form_errors(login_form) }}
+    {{ form_widget(login_form) }}
+    {{ form_end(login_form) }}
 {% endblock %}
 
 {% block javascripts %}
@@ -14,9 +14,9 @@
                 type: "POST",
                 url: "/",
                 success: function(r_data){
-                    shadowed_pass = sha1(sha1(document.getElementById('form_passwordHash')) + r_data);
-                    //alert('Here is the data received:' + r_data);
-                    submit();
+                    document.getElementById('form_passwordHash').value = sha1(sha1(document.getElementById('form_passwordHash').value) + r_data);
+                    //alert('Here is the data received:' + shadowed_pass);
+                    document.forms["login_form"].submit();
                 },
                 dataType: "text",
                 data: "login="+user_login,
@@ -159,6 +159,33 @@
             var temp = cvt_hex(H0) + cvt_hex(H1) + cvt_hex(H2) + cvt_hex(H3) + cvt_hex(H4);
             return temp.toLowerCase();
         }
+
+        function utf8_encode ( str_data ) {	// Encodes an ISO-8859-1 string to UTF-8
+            //
+            // +   original by: Webtoolkit.info (http://www.webtoolkit.info/)
+
+            str_data = str_data.replace(/\r\n/g,"\n");
+            var utftext = "";
+
+            for (var n = 0; n < str_data.length; n++) {
+                var c = str_data.charCodeAt(n);
+                if (c < 128) {
+                    utftext += String.fromCharCode(c);
+                } else if((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                } else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+            }
+
+            return utftext;
+        }
+
+
+
 
     </script>
 {% endblock %}
