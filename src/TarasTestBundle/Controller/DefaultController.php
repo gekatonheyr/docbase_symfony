@@ -2,6 +2,7 @@
 
 namespace TarasTestBundle\Controller;
 
+use Symfony\Component\Form\FormError;
 use TarasTestBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,6 +31,7 @@ class DefaultController extends Controller
             ->add("enter", SubmitType::class, array('label' => 'Enter'))
             ->getForm();
 
+
         $form->handleRequest($request);
         $data = $form->getData();
         $login = $request->request->get('login') ? $request->request->get('login') : $data->getLogin();
@@ -54,9 +56,8 @@ class DefaultController extends Controller
                     return $this->render('TarasTestBundle:Default:index.html.twig', array('login' => $user->getLogin(),
                         'passwordHash' => $user->getPasswordHash(),));
                 }else{
-                    //$form->addError('You have entered wrong data!');
-                    return $this->render('TarasTestBundle:Default:login.html.twig', array('login_form' => $form->createView(),
-                                                                                            ));
+                    $form->addError(new FormError('You have entered wrong data!'));
+                    return $this->render('TarasTestBundle:Default:login.html.twig', array('login_form' => $form->createView(),));
                 }
             }
         }
