@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     <script type="application/javascript">
         function login(user_login){
             $.ajax({
