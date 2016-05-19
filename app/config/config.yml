@@ -86,7 +86,7 @@ braincrafted_bootstrap:
     css_preprocessor: less
     output_dir: bootstrap
     assets_dir: %kernel.root_dir%/../vendor/twbs/bootstrap
-    jquery_path: %kernel.root_dir%/../vendor/jquery/jquery/jquery-1.12.3.js
+    jquery_path: %kernel.root_dir%/../web/bootstrap/js/jquery.js
     css_preprocessor: less
     fonts_dir: %kernel.root_dir%/../web/fonts
     auto_configure:
