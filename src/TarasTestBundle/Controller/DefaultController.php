@@ -26,7 +26,9 @@ class DefaultController extends Controller
                 'id'=>'login_form',
                 'onsubmit'=>'login(document.getElementById(\'form_login\').value)')
         ))
-            ->add("login", TextType::class, array('label' => 'Enter your login please '))
+            ->add("login", TextType::class, array('label' => 'Enter your login please ', 'attr'=>array(
+                'style'=>'width: 30;',
+            )))
             ->add("passwordHash", TextType::class)
             ->add("enter", SubmitType::class, array('label' => 'Enter'))
             ->getForm();
