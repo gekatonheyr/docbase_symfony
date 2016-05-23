@@ -76,8 +76,8 @@ assetic:
    #java: /usr/bin/java
    filters:
         less:
-            node: 'C:/Program Files/nodejs/node.exe' # /usr/local/bin/node
-            node_paths: ['C:/npm/node_modules'] #[/usr/local/lib/node_modules]
+            node: 'C:/nodejs/node.exe' # /usr/local/bin/node
+            node_paths: ['C:/nodejs/node_modules'] #[/usr/local/lib/node_modules]
             apply_to: '\.less$'
             cssrewrite: ~
 
@@ -86,7 +86,7 @@ braincrafted_bootstrap:
     css_preprocessor: less
     output_dir: bootstrap
     assets_dir: %kernel.root_dir%/../vendor/twbs/bootstrap
-    jquery_path: %kernel.root_dir%/../web/bootstrap/js/jquery.js
+    jquery_path: %kernel.root_dir%/../vendor/jquery/jquery/jquery-1.12.3.js
     css_preprocessor: less
     fonts_dir: %kernel.root_dir%/../web/fonts
     auto_configure:

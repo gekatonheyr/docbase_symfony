@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class DefaultController extends Controller
 {
@@ -27,8 +28,8 @@ class DefaultController extends Controller
                 'onsubmit'=>'login(document.getElementById(\'form_login\').value)')
         ))
             ->add("login", TextType::class, array('label' => 'Enter your login please '))
-            ->add("passwordHash", TextType::class)
-            ->add("enter", SubmitType::class, array('label' => 'Enter'))
+            ->add("passwordHash", PasswordType::class, array('label' => 'Enter your password here'))
+            ->add("enter", SubmitType::class, array('label' => 'Enter the system'))
             ->getForm();
 
 
@@ -54,7 +55,7 @@ class DefaultController extends Controller
                 $tmp_user = $user_repo->findOneBy(array('login' => $login));
                 if($tmp_user && $pass === sha1($tmp_user->getPasswordHash().sha1($tmp_user->getSalt()))) {
                     return $this->render('TarasTestBundle:Default:index.html.twig', array('login' => $user->getLogin(),
-                        'passwordHash' => $user->getPasswordHash(),));
+                        'pass' => $user->getPasswordHash(),));
                 }else{
                     $form->addError(new FormError('You have entered wrong data!'));
                     return $this->render('TarasTestBundle:Default:login.html.twig', array('login_form' => $form->createView(),));

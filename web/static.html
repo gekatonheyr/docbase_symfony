@@ -1,6 +1,96 @@
-<?php
-namespace NS{class Myclass{}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello from static</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="bootstrap/css/styles.css" rel="stylesheet">
+</head>
 
-echo Myclass::class;
-}
-?>
+<body>
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Our company</h1>
+            <center><p>Some text to cite some wise man</p></center>
+            <a class="btn btn-success btn-lg">Wisit us!</a>
+        </div>
+    </div>
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">Some my brand!</a>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="#">Start</a></li>
+                    <li><a href="#">Second</a></li>
+                    <li><a href="#">Third</a></li>
+                    <li><a href="#">News</a> </li>
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Close</a> </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <h3 class="list-group-item-heading">First room!</h3>
+                        <p class="list-group-item-text">Fist text of item in group!!!!</p>
+                    </a>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <h3 class="list-group-item-heading">Second room!</h3>
+                        <p class="list-group-item-text">Seconf text of item in group!!!!</p>
+                    </a>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <h3 class="list-group-item-heading">Third room!</h3>
+                        <p class="list-group-item-text">Third text of item in group!!!!</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h2 class="text-center">Outer limits</h2>
+                <a href="#"><img src="img/icon1.png" class="img-responsive img-rounded"></a>
+                <p>Some text to add here to place some news!</p>
+            </div>
+            <div class="col-md-3">
+                <h2 class="text-center">Outer limits 2</h2>
+                <a href="#"><img src="img/icon2.png" class="img-responsive img-thumbnail"></a>
+                <p>Some text to add here to place some news!</p>
+            </div>
+        </div>
+    </div>
+    <div id="myCarousel" class="carousel slide">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-target="#myCarousel" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="item active">First</div>
+            <div class="item">Second</div>
+            <div class="item">Third</div>
+        </div>
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="icon-prev"></span></a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="icon-next"></span></a>
+    </div>
+    <div class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+            <p class="navbar-text">Created by T.Sarana aka Gekatonheyr</p>
+        </div>
+    </div>
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+</body>
+
+</html>
