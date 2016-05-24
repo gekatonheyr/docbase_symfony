@@ -4,14 +4,79 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="{{ asset('bootstrap/css/bootstrap.css') }}" rel="stylesheet" media="screen">
-        <script src="{{ asset('bootstrap/js/jquery.js') }}"></script>
-        <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet" media="screen">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        <div class="jumbotron">
+            <div class="container">
+                <h1 id="companyGroupName">PJSC "Agrokombinat "Kalita"</h1>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        Dropdown example <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                    </ul>
+                </div>
+                <p>Cite of the wise man</p>
+            </div>
+        </div>
+
+        <div class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <a href="#" class="navbar-brand">Kalita</a>
+                <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Current position</a></li>
+                        <li><a href="#">Vacations</a></li>
+                        <li><a href="#">Contacts</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item">
+                            <h3 class="list-group-item-heading">Some header data to click</h3>
+                            <p class="list-group-item-text">Description of item to get</p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <h3 class="list-group-item-heading">Some header data to click</h3>
+                            <p class="list-group-item-text">Description of item to get</p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <h3 class="list-group-item-heading">Some header data to click</h3>
+                            <p class="list-group-item-text">Description of item to get</p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <h3 class="list-group-item-heading">Some header data to click</h3>
+                            <p class="list-group-item-text">Description of item to get</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
+        <script src="{{ asset('bootstrap/js/jquery.js') }}"></script>
+        <script src="{{ asset('bootstrap/js/bootstrap.js') }}"></script>
     </body>
 </html>
