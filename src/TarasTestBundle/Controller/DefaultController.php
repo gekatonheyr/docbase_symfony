@@ -3,34 +3,30 @@
 namespace TarasTestBundle\Controller;
 
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Cookie;
 use TarasTestBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
+use TarasTestBundle\Form\LoginForm;
 
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/{slug}", name="root_route", defaults={"slug"=""})
      */
-    public function indexAction(Request $request)
+    public function authAction(Request $request, $slug)
     {
         $user = new User();
+
+        $request_cookies = $request->cookies;
+        if($request_cookies->has('AUTH_COOKIE')){
+            $tmp = $request_cookies->get('AUTH_COOKIE');
+        }
         $response =  new Response();
 
-        $form = $this->createFormBuilder($user, array(
-            'attr'=>array(
-                'id'=>'login_form',
-                'onsubmit'=>'login(document.getElementById(\'form_login\').value)')
-        ))
-            ->add("login", TextType::class, array('label' => 'Enter your login please '))
-            ->add("passwordHash", TextType::class)
-            ->add("enter", SubmitType::class, array('label' => 'Enter'))
-            ->getForm();
-
+        $form = $this->createForm(LoginForm::class, $user);
 
         $form->handleRequest($request);
         $data = $form->getData();
@@ -49,10 +45,10 @@ class DefaultController extends Controller
             }
         }else if($login && $pass){
             if ($form->isSubmitted() && $form->isValid()) {
-                $user_em =$this->getDoctrine()->getManager();
-                $user_repo = $user_em->getRepository('TarasTestBundle:User');
-                $tmp_user = $user_repo->findOneBy(array('login' => $login));
+                $tmp_user =$this->getDoctrine()->getManager()->getRepository('TarasTestBundle:User')->findOneBy(array('login' => $login));
                 if($tmp_user && $pass === sha1($tmp_user->getPasswordHash().sha1($tmp_user->getSalt()))) {
+                    $auth_cookie = new Cookie('AUTH_COOKIE', 'somevalue', time()+3600, '/');
+                    $response->headers->setCookie($auth_cookie);
                     return $this->render('TarasTestBundle:Default:index.html.twig', array('login' => $user->getLogin(),
                         'passwordHash' => $user->getPasswordHash(),));
                 }else{
@@ -62,4 +58,6 @@ class DefaultController extends Controller
             }
         }
     }
+
+
 }

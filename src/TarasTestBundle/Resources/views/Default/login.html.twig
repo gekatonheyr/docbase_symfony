@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block content %}
+{% block mainContent %}
     {{ form_start(login_form) }}
 
     {{ form_widget(login_form) }}
@@ -15,7 +15,7 @@
                 type: "POST",
                 url: "/",
                 success: function(r_data){
-                    document.getElementById('form_passwordHash').value = sha1(sha1(document.getElementById('form_passwordHash').value) + r_data);
+                    document.getElementById('login_form_passwordHash').value = sha1(sha1(document.getElementById('login_form_passwordHash').value) + r_data);
                     //alert('Here is the data received:' + shadowed_pass);
                     document.forms["login_form"].submit();
                 },
