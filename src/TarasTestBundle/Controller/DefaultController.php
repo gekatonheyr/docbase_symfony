@@ -23,6 +23,17 @@ class DefaultController extends Controller
         $request_cookies = $request->cookies;
         if($request_cookies->has('AUTH_COOKIE')){
             $tmp = $request_cookies->get('AUTH_COOKIE');
+            $router = $this->get('router');
+            $router_collection = $router->getRouteCollection()->all();
+            $actual_path = $request->getPathInfo();
+            foreach($router_collection as $value){
+                if($value->getPath() === $actual_path){
+                    $action_controller = explode('::', $value->getDefaults()['_controller']);
+                    //use $action_controller[0];
+                    $action_controller[1]();
+
+                }
+            }
         }
         $response =  new Response();
 
@@ -45,10 +56,10 @@ class DefaultController extends Controller
             }
         }else if($login && $pass){
             if ($form->isSubmitted() && $form->isValid()) {
-                $tmp_user =$this->getDoctrine()->getManager()->getRepository('TarasTestBundle:User')->findOneBy(array('login' => $login));
+                $tmp_user = $this->getDoctrine()->getManager()->getRepository('TarasTestBundle:User')->findOneBy(array('login' => $login));
                 if($tmp_user && $pass === sha1($tmp_user->getPasswordHash().sha1($tmp_user->getSalt()))) {
-                    $auth_cookie = new Cookie('AUTH_COOKIE', 'somevalue', time()+3600, '/');
-                    $response->headers->setCookie($auth_cookie);
+                    $response->headers->setCookie(new Cookie('AUTH_COOKIE', $tmp_user->getId().' '.$pass, time()+3600, '/'));
+                    $response->send();
                     return $this->render('TarasTestBundle:Default:index.html.twig', array('login' => $user->getLogin(),
                         'passwordHash' => $user->getPasswordHash(),));
                 }else{
