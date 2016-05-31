@@ -70,6 +70,29 @@ class User
      */
     private $accessId;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="last_visited", type="string", length=255)
+     */
+    private $lastVisited;
+
+    /**
+     * @return string
+     */
+    public function getLastVisited()
+    {
+        return $this->lastVisited;
+    }
+
+    /**
+     * @param string $lastVisited
+     */
+    public function setLastVisited($lastVisited)
+    {
+        $this->lastVisited = $lastVisited;
+    }
+
 
     /**
      * Get id
