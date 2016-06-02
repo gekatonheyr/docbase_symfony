@@ -20,15 +20,23 @@ class DefaultController extends Controller
     {
         $user = new User();
         $response =  new Response();
+        $request_cookies = $request->cookies;
 
         $user_em = $this->getDoctrine()->getManager();
         $user_base = $user_em->getRepository('TarasTestBundle:User');
 
         $router = $this->get('router');
-        $router_collection = $router->getRouteCollection()->all();
+        $router_collection = $router->getRouteCollection();
         $actual_path = $request->getPathInfo();
+        $current_controller = ($actual_path==="/")?     $router_collection->get('index_page')->getDefaults()['_controller']
+                                                  :     function($router_collection, $actual_path, $request, $user){
+            foreach($router_collection->all() as $value){
+                if($value->getPath() === $actual_path){
+                    return $value->getDefaults()['_controller'];
+                }
+            }
+        };
 
-        $request_cookies = $request->cookies;
         if($request_cookies->has('AUTH_COOKIE')){
             $auth_cookie_value = $request_cookies->get('AUTH_COOKIE');
             $auth_data = explode(' ', $auth_cookie_value);
@@ -37,15 +45,7 @@ class DefaultController extends Controller
                 $user->generateSalt($user_em);
                 $response->headers->setCookie(new Cookie('AUTH_COOKIE', $user->getId().' '.sha1($user->getPasswordHash().sha1($user->getSalt())), time()+3600, '/'));
                 $response->send();
-
-                foreach($router_collection as $value){
-                    if($value->getPath() === $actual_path){
-                        return $this->forward($value->getDefaults()['_controller'], array('request' => $request,
-                                                                                            'user' => $user,));
-                    }
-                }
-                return $this->forward('TarasTestBundle:Default:index', array('request' => $request,
-                                                                        'user' => $user,));
+                return $this->forward($current_controller, array('request' => $request, 'user' => $user,));
             }
         }
 
@@ -70,7 +70,7 @@ class DefaultController extends Controller
                 if($tmp_user && $pass === sha1($tmp_user->getPasswordHash().sha1($tmp_user->getSalt()))) {
                     $response->headers->setCookie(new Cookie('AUTH_COOKIE', $tmp_user->getId().' '.$pass, time()+3600, '/'));
                     $response->send();
-                    return $this->forward($value->getDefaults()['_controller'], array('request' => $request,
+                    return $this->forward($current_controller, array('request' => $request,
                         'user' => $user,));
                 }else{
                     $form->addError(new FormError('You have entered wrong data!'));
