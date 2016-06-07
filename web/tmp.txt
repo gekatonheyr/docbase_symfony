@@ -1,0 +1,28 @@
+<div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <h3 class="list-group-item-heading">First room!</h3>
+                        <p class="list-group-item-text">Fist text of item in group!!!!</p>
+                    </a>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <h3 class="list-group-item-heading">Second room!</h3>
+                        <p class="list-group-item-text">Seconf text of item in group!!!!</p>
+                    </a>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <h3 class="list-group-item-heading">Third room!</h3>
+                        <p class="list-group-item-text">Third text of item in group!!!!</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h2 class="text-center">Outer limits</h2>
+                <a href="#"><img src="img/icon1.png" class="img-responsive img-rounded"></a>
+                <p>Some text to add here to place some news!</p>
+            </div>
+            <div class="col-md-3">
+                <h2 class="text-center">Outer limits 2</h2>
+                <a href="#"><img src="img/icon2.png" class="img-responsive img-thumbnail"></a>
+                <p>Some text to add here to place some news!</p>

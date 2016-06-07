@@ -4,7 +4,12 @@
     <title>Hello from static</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
-    <link href="bootstrap/css/styles.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="js/jstree/themes/default/style.css" rel="stylesheet">
+
+    <script src="bootstrap/js/jquery.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="js/jstree/jstree.js"></script>
 </head>
 
 <body>
@@ -37,60 +42,61 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                <div class="list-group">
-                    <a href="#" class="list-group-item">
-                        <h3 class="list-group-item-heading">First room!</h3>
-                        <p class="list-group-item-text">Fist text of item in group!!!!</p>
-                    </a>
-                </div>
-                <div class="list-group">
-                    <a href="#" class="list-group-item">
-                        <h3 class="list-group-item-heading">Second room!</h3>
-                        <p class="list-group-item-text">Seconf text of item in group!!!!</p>
-                    </a>
-                </div>
-                <div class="list-group">
-                    <a href="#" class="list-group-item">
-                        <h3 class="list-group-item-heading">Third room!</h3>
-                        <p class="list-group-item-text">Third text of item in group!!!!</p>
-                    </a>
+            <div class="col-md-3">
+                <div id="tree_container">
+                    <script>
+                        $(function() {
+                            $('#tree_container').jstree({
+                                'core' : {
+                                    'data' : [
+                                        { 'text' : 'Root node', 'children' : [
+                                            { 'text' : 'Child node 1', 'children' : [
+                                                {'text' : 'Subchild 1'},
+                                                {'text' : 'Subchild 2', 'children' : [
+                                                    {'text' : 'Under subchild 1 with long name'},
+                                                    {'text' : 'Under subchild 2'}
+                                                ]}
+                                            ] },
+                                            { 'text' : 'Child node 2' }
+                                        ]
+                                        },
+                                        { 'text' : 'Second root', 'children' : [
+                                            { 'text' : 'Second child 1'},
+                                            { 'text' : 'Second child 2'}
+                                        ]}
+                                    ]
+                                },
+                                'plugins' : ['contextmenu', 'dnd'],
+                            });
+                        });
+                    </script>
                 </div>
             </div>
-            <div class="col-md-3">
-                <h2 class="text-center">Outer limits</h2>
-                <a href="#"><img src="img/icon1.png" class="img-responsive img-rounded"></a>
-                <p>Some text to add here to place some news!</p>
-            </div>
-            <div class="col-md-3">
-                <h2 class="text-center">Outer limits 2</h2>
-                <a href="#"><img src="img/icon2.png" class="img-responsive img-thumbnail"></a>
-                <p>Some text to add here to place some news!</p>
+            <div class="col-md-9">
+                JSON-текст представляет собой (в закодированном виде) одну из двух структур:
+
+                Набор пар ключ: значение. В различных языках это реализовано как объект, запись, структура, словарь, хэш-таблица, список с ключом или ассоциативный массив. Ключом может быть только строка (регистрозависимая: имена с буквами в разных регистрах считаются разными[3]), значением — любая форма.
+                Упорядоченный набор значений. Во многих языках это реализовано как массив, вектор, список или последовательность.
+                Это универсальные структуры данных: как правило, любой современный язык программирования поддерживает их в той или иной форме. Они легли в основу JSON, так как он используется для обмена данными между различными языками программирования.
+
+                В качестве значений в JSON могут быть использованы:
+
+                Объект — это неупорядоченное множество пар ключ:значение, заключённое в фигурные скобки «{ }». Ключ описывается строкой, между ним и значением стоит символ «:». Пары ключ-значение отделяются друг от друга запятыми.
+                Массив (одномерный) — это упорядоченное множество значений. Массив заключается в квадратные скобки «[ ]». Значения разделяются запятыми.
+                Число.
+                Литералы true, false и null.
+                Строка — это упорядоченное множество из нуля или более символов юникода, заключенное в двойные кавычки. Символы могут быть указаны с использованием escape-последовательностей, начинающихся с обратной косой черты «\» (поддерживаются варианты \", \\, \/, \t, \n, \r, \f и \b), или записаны шестнадцатеричным кодом в кодировке UTF-8 в виде \uFFFF.
+                Строка очень похожа на одноимённый тип данных в языках С и Java. Число тоже очень похоже на С- или Java-число, за исключением того, что используется только десятичный формат. Пробелы могут быть вставлены между любыми двумя синтаксическими элементами.
             </div>
         </div>
-    </div>
-    <div id="myCarousel" class="carousel slide">
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
-            <li data-target="#myCarousel" data-slide-to="3"></li>
-        </ol>
-        <div class="carousel-inner">
-            <div class="item active">First</div>
-            <div class="item">Second</div>
-            <div class="item">Third</div>
-        </div>
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="icon-prev"></span></a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="icon-next"></span></a>
     </div>
     <div class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
             <p class="navbar-text">Created by T.Sarana aka Gekatonheyr</p>
         </div>
     </div>
-    <script src="bootstrap/js/jquery.js"></script>
-    <script src="bootstrap/js/bootstrap.js"></script>
+
+
 </body>
 
 </html>
