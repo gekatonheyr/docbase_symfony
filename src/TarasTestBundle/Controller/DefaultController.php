@@ -89,5 +89,17 @@ class DefaultController extends Controller
             'passwordHash' => $user->getPasswordHash(),));
     }
 
+    /**
+     * @Route("/buildtree", name="build_tree")
+     */
+    public function buildTree(Request $request, $user)
+    {
+        return new Response('[{
+                    "id":1,"text":"Root node","children":[
+                    {"id":2,"text":"Child node 1"},
+                    {"id":3,"text":"Child node 2"}
+                ]}]');
+    }
+
 
 }

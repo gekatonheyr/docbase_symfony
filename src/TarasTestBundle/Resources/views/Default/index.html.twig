@@ -1,27 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <link href="{{ asset(js/jstree/themes/default/style.css) }}" rel="stylesheet">
+    <link href="{{ asset('js/jstree/themes/default/style.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset(js/jstree/jstree.js) }}"></script>
+    <script src="{{ asset('js/jstree/jstree.js') }}"></script>
 {% endblock %}
 
 {% block sideBarTree %}
     <div id="tree_container">
         <script>
-        $(function(){
-            $('#tree_container').jstree({
-                'core' : {
-                    'data' : [
-                        {'text' : 'Some node in the tree'},
-                        {'text' : 'Some other node to display'},
-                        ]
-                },
-                'plugins' : ['dnd', 'contextmenu'],
+            $(function(){
+                $('#tree_container').jstree({
+                    'core' : {
+                        'data' : {
+                            'url': '/buildtree',
+                            'dataType': 'json',
+                        }
+                    },
+                    'plugins' : ['dnd', 'contextmenu'],
+                });
             });
-        });
         </script>
     </div>
 {% endblock %}
