@@ -29,13 +29,13 @@ class DefaultController extends Controller
         $router_collection = $router->getRouteCollection();
         $actual_path = $request->getPathInfo();
         $current_controller = ($actual_path==="/")?     $router_collection->get('index_page')->getDefaults()['_controller']
-                                                  :     function($router_collection, $actual_path, $request, $user){
+                                                  :     $this->disposeController($router_collection, $actual_path, $request, $user);/*{
             foreach($router_collection->all() as $value){
                 if($value->getPath() === $actual_path){
                     return $value->getDefaults()['_controller'];
                 }
             }
-        };
+        };*/
 
         if($request_cookies->has('AUTH_COOKIE')){
             $auth_cookie_value = $request_cookies->get('AUTH_COOKIE');
@@ -90,7 +90,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/buildtree", name="build_tree")
+     * @Route("/buildtree", name="buildtree")
      */
     public function buildTree(Request $request, $user)
     {
@@ -99,6 +99,14 @@ class DefaultController extends Controller
                     {"id":2,"text":"Child node 1"},
                     {"id":3,"text":"Child node 2"}
                 ]}]');
+    }
+
+    public function disposeController($router_collection, $actual_path, $request, $user){
+        foreach($router_collection->all() as $value){
+            if($value->getPath() === $actual_path){
+                return $value->getDefaults()['_controller'];
+            }
+        }
     }
 
 

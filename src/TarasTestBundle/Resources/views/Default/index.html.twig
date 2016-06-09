@@ -15,8 +15,11 @@
                 $('#tree_container').jstree({
                     'core' : {
                         'data' : {
-                            'url': '/buildtree',
+                            'url': '/buildtree?',
                             'dataType': 'json',
+                            'data': function(node){
+                                return {'id': node.id};
+                            }
                         }
                     },
                     'plugins' : ['dnd', 'contextmenu'],
