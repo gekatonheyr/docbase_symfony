@@ -94,6 +94,17 @@ class DefaultController extends Controller
      */
     public function buildTree(Request $request, $user)
     {
+        $em = $this->getDoctrine()->getManager();
+        $current_node = $request->query->get('id', 'parameters');
+        if($current_node == '#'){
+            $tree_root = $em->getRepository('TarasTestBundle:DeptStruct')->findAll();
+            $curr_tree_lvl_nodes = array();
+            foreach($tree_root as $key => $value){
+                $curr_tree_lvl_nodes[] = array('id' => $value->getDeptAlias(), 'text' => $value->getDeptTitle(), 'children' => true);
+            }
+            $curr_tree_lvl_nodes = json_encode($curr_tree_lvl_nodes);
+            return new Response($curr_tree_lvl_nodes);
+        }
         return new Response('[{
                     "id":1,"text":"Root node","children":[
                     {"id":2,"text":"Child node 1"},
