@@ -95,21 +95,58 @@ class DefaultController extends Controller
     public function buildTree(Request $request, $user)
     {
         $em = $this->getDoctrine()->getManager();
+        /*here i'll define root table of the database to form the sidebar tree.
+        not sure it is right decision, the time will show it
+        but as i think later on i'll create some config file to store this parameter*/
+        $root_table = $em->getRepository('TarasTestBundle:DeptStruct');
+
         $current_node = $request->query->get('id', 'parameters');
         if($current_node == '#'){
-            $tree_root = $em->getRepository('TarasTestBundle:DeptStruct')->findAll();
+            $tree_root = $root_table->findAll();
             $curr_tree_lvl_nodes = array();
             foreach($tree_root as $key => $value){
-                $curr_tree_lvl_nodes[] = array('id' => $value->getDeptAlias(), 'text' => $value->getDeptTitle(), 'children' => true);
+                $curr_tree_lvl_nodes[] = array( 'id' => $value->getDeptAlias().'-'.$value->getSuccessorTable(),
+                                                'text' => $value->getDeptTitle(),
+                                                'children' => true);
             }
-            $curr_tree_lvl_nodes = json_encode($curr_tree_lvl_nodes);
-            return new Response($curr_tree_lvl_nodes);
+            return new Response(json_encode($curr_tree_lvl_nodes));
         }
-        return new Response('[{
-                    "id":1,"text":"Root node","children":[
-                    {"id":2,"text":"Child node 1"},
-                    {"id":3,"text":"Child node 2"}
-                ]}]');
+        $children = true;
+        $entity_path = explode('-', $current_node);
+        $entity_pairs = array();
+        while(!empty($entity_path)){
+            $entity_pairs[array_shift($entity_path)] = array_shift($entity_path);
+        }
+
+        reset($entity_pairs);
+        $root_entity_name = key($entity_pairs);
+        $tmp = $root_table->findOneBy(array('alias' => $root_entity_name));
+        $current_entity = array_pop($entity_pairs);
+        $parent_entity = array_pop($entity_pairs);
+
+
+        $current_entity_tmpl = explode('_', $current_entity);
+        foreach($current_entity_tmpl as $key => $value){
+            $entity_name[$key] = ucfirst($value);
+        }
+        $entity_name = implode('', $entity_name);
+
+        /*in EACH table we need to have some clue column to bundle :) all tables together,
+        so i think to form this clue inherited from root_table mentioned at the beginning of the function.
+        It forms from the root_table name - the first part of the combination which is the name of table,
+        plus postfix _id
+        */
+        $clue_column = array_shift(explode('_', $em->getClassMetadata('TarasTestBundle:DeptStruct')->getTableName())).'_id';
+
+
+        $target_table = $em->getRepository('TarasTestBundle:'.$entity_name)->findAll();
+        foreach($target_table as $key => $value){
+            if(method_exists($value, 'getHasSubnodes')) $children = $value->getHasSubnodes() ? true : false;
+            $curr_tree_lvl_nodes[] = array( 'id' => $current_node.'-'.$value->getAlias().'-'.$value->getSuccessorTable(),
+                                            'text' => $value->getTitle(),
+                                            'children' => $children);
+        }
+        return new Response(json_encode($curr_tree_lvl_nodes));
     }
 
     public function disposeController($router_collection, $actual_path, $request, $user){

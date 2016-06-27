@@ -38,9 +38,39 @@ class DeptStruct
     /**
      * @var string
      *
-     * @ORM\Column(name="dept_alias", type="string", length=255)
+     * @ORM\Column(name="alias", type="string", length=255)
      */
-    private $deptAlias;
+    private $alias;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="successor_table", type="string", length=255)
+     */
+    private $successorTable;
+
+    /**
+     * Get successorTable
+     *
+     * @return string
+     */
+    public function getSuccessorTable()
+    {
+        return $this->successorTable;
+    }
+
+    /**
+     * Set successorTable
+     *
+     * @param string $successorTable
+     *
+     * @return DeptStruct
+     */
+    public function setSuccessorTable($successorTable)
+    {
+        $this->successorTable = $successorTable;
+        return $this;
+    }
 
 
     /**
@@ -102,27 +132,27 @@ class DeptStruct
     }
 
     /**
-     * Set deptAlias
+     * Set alias
      *
-     * @param string $deptAlias
+     * @param string $alias
      *
      * @return DeptStruct
      */
-    public function setDeptAlias($deptAlias)
+    public function setAlias($alias)
     {
-        $this->deptAlias = $deptAlias;
+        $this->alias = $alias;
 
         return $this;
     }
 
     /**
-     * Get deptAlias
+     * Get alias
      *
      * @return string
      */
-    public function getDeptAlias()
+    public function getAlias()
     {
-        return $this->deptAlias;
+        return $this->alias;
     }
 }
 
