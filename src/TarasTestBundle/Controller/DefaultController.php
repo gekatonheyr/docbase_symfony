@@ -105,7 +105,7 @@ class DefaultController extends Controller
             $tree_root = $root_table->findAll();
             $curr_tree_lvl_nodes = array();
             foreach($tree_root as $key => $value){
-                $curr_tree_lvl_nodes[] = array( 'id' => $value->getDeptAlias().'-'.$value->getSuccessorTable(),
+                $curr_tree_lvl_nodes[] = array( 'id' => $value->getAlias().'-'.$value->getSuccessorTable(),
                                                 'text' => $value->getDeptTitle(),
                                                 'children' => true);
             }
@@ -120,7 +120,9 @@ class DefaultController extends Controller
 
         reset($entity_pairs);
         $root_entity_name = key($entity_pairs);
-        $tmp = $root_table->findOneBy(array('alias' => $root_entity_name));
+        $aliases_values = array_keys($entity_pairs);
+        $successors_vallues = array_values($entity_pairs);
+
         $current_entity = array_pop($entity_pairs);
         $parent_entity = array_pop($entity_pairs);
 
@@ -136,12 +138,25 @@ class DefaultController extends Controller
         It forms from the root_table name - the first part of the combination which is the name of table,
         plus postfix _id
         */
-        $clue_column = array_shift(explode('_', $em->getClassMetadata('TarasTestBundle:DeptStruct')->getTableName())).'_id';
+        $clue_column = array_shift(explode('_', $em->getClassMetadata('TarasTestBundle:DeptStruct')->getTableName())).'Id';
+        $clue_entity_id = $root_table->findOneBy(array('alias' => $root_entity_name))->getId();
+
+        if($current_entity == $parent_entity){
+            $parent_node_id = $em->getRepository('TarasTestBundle:'.$entity_name)->findOneBy(array('alias' => array_pop($aliases_values)))->getId();
+            $target_table = $em->getRepository('TarasTestBundle:'.$entity_name)->findBy(array('parentId' => $parent_node_id));
+        }elseif(in_array($clue_column, $em->getClassMetadata('TarasTestBundle:'.$entity_name)->getFieldNames())){
+            $target_table = $em->getRepository('TarasTestBundle:'.$entity_name)->findBy(array($clue_column => $clue_entity_id));
+        }else {
+            $target_table = $em->getRepository('TarasTestBundle:' . $entity_name)->findAll();
+        }
 
 
-        $target_table = $em->getRepository('TarasTestBundle:'.$entity_name)->findAll();
         foreach($target_table as $key => $value){
             if(method_exists($value, 'getHasSubnodes')) $children = $value->getHasSubnodes() ? true : false;
+            if($current_entity != $parent_entity) {
+                if (method_exists($value, 'getParentId') && $value->getParentId() != null) continue;
+            }
+
             $curr_tree_lvl_nodes[] = array( 'id' => $current_node.'-'.$value->getAlias().'-'.$value->getSuccessorTable(),
                                             'text' => $value->getTitle(),
                                             'children' => $children);
