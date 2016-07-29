@@ -2,6 +2,11 @@
 
 namespace TarasTestBundle\Controller;
 
+use Doctrine\Common\EventManager;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
+use Doctrine\Common\EventSubscriber;
+
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Cookie;
 use TarasTestBundle\Entity\User;
@@ -10,6 +15,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use TarasTestBundle\Form\LoginForm;
+use TarasTestBundle\EventSubscribers\DinamicDoctrineSubscriber;
+use TarasTestBundle\EventListeners\DinamicDoctrineListeners;
 
 class DefaultController extends Controller
 {
@@ -85,8 +92,18 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request, $user)
     {
+        $em = $this->getDoctrine()->getManager();
+        $holding_repo = $em->getRepository('TarasTestBundle:HoldingStruct');
+        $cg_full_list =$holding_repo->findAll();
+        $cg_list = array();
+        foreach($cg_full_list as $value){
+            $cg_list[$value->getAlias()] = $value->getCgName();
+        }
+        $citations_repo = $em->getRepository('TarasTestBundle:Citations');
+        $citations_list = $citations_repo->findAll();
+        $current_cite=array_rand($citations_list);
         return $this->render('TarasTestBundle:Default:index.html.twig', array('login' => $user->getLogin(),
-            'passwordHash' => $user->getPasswordHash(),));
+            'passwordHash' => $user->getPasswordHash(), 'holdingGroupsList' => $cg_list, 'currentCite' => $citations_list[$current_cite]->getContent()));
     }
 
     /**
@@ -108,6 +125,14 @@ class DefaultController extends Controller
                 $curr_tree_lvl_nodes[] = array( 'id' => $value->getAlias().'-'.$value->getSuccessorTable(),
                                                 'text' => $value->getDeptTitle(),
                                                 'children' => true);
+                /* using this loop to create description files with different language extensions in
+                appropriate 'Bundle/Resources/description' directory.
+                foreach(array('ru', 'uk', 'en') as $lang){
+                    $tmpfile = fopen(__DIR__.'/../Resources/descriptions/'.$value->getAlias().'.'.$lang, 'w');
+                    fwrite($tmpfile, $value->getDeptTitle());
+                    fclose($tmpfile);
+                }*/
+
             }
             return new Response(json_encode($curr_tree_lvl_nodes));
         }
@@ -162,6 +187,76 @@ class DefaultController extends Controller
                                             'children' => $children);
         }
         return new Response(json_encode($curr_tree_lvl_nodes));
+    }
+
+    /**
+     * @Route("/getnodedescription", name="get_node_description")
+     */
+    public function getNodeDescription(Request $request, $user)
+    {
+
+        /*//$evm = new EventManager();
+        //$evm->addEventSubscriber(new DinamicDoctrineSubscriber());
+        $em = $this->getDoctrine()->getManager();
+        $evm = $em->getEventManager();
+        //$evm->addEventListener(Events::loadClassMetadata, new DinamicDoctrineListeners());
+        $evm->addEventSubscriber(new DinamicDoctrineSubscriber());
+        $tmp_metadata = $em->getClassMetadata('TarasTestBundle:Activities');*/
+
+        /* let's see - if the request-node is not a leaf of the tre - we'll get only description to show at the
+            main content area*/
+        $description_dir = __DIR__.'/../Resources/descriptions/'; /* DO NOT FORGET TO ADD THIS STATEMENT TO THE CONFIG FILE LATER !!!!*/
+        $dfile_not_found_fname = $description_dir.'descriptionnotfound'; /* DO NOT FORGET TO ADD THIS STATEMENT TO THE CONFIG FILE LATER !!!!*/
+        $dfile_not_found_handler = fopen($dfile_not_found_fname, 'r');
+
+        $entity_path = explode('-', $request->query->get('id', 'parameters'));
+        $name_pairs = array();
+        while(!empty($entity_path)){
+            $name_pairs[array_shift($entity_path)] = array_shift($entity_path);
+        }
+
+        if($request->query->get('isleaf', 'parameters') == 'false'){
+            $description_file_name = end(array_keys($name_pairs));
+            $lang_list = explode(';', $request->server->get('HTTP_ACCEPT_LANGUAGE', 'parameters'));
+            $finished_list = array();
+            foreach($lang_list as $value){
+                foreach(explode(',', $value) as $value){
+                    if(strpos($value, 'q=')=== false){
+                        if(strpos($value, '-') !== false){
+                            $value = explode('-', $value)[0];
+                        }
+                        $finished_list[] = $value;
+                    }
+                }
+            }
+            foreach($finished_list as $extension){
+            if(file_exists($description_dir.$description_file_name.'.'.$extension)){
+                    return new Response(fread(fopen($description_dir.$description_file_name.'.'.$extension, 'r'), 1000));
+                }
+            }
+            return new Response(fread($dfile_not_found_handler, 1000));
+        }
+
+        /*  otherwise - we'll try to find an appropriate table. Such table may be named not only explicitly
+            but also can have composite name - prefixed holding name and actual name got from node id */
+        $em = $this->getDoctrine()->getManager();
+        $entity_list = array();
+        foreach ($em->getMetadataFactory()->getAllMetadata() as $md) {
+            /*var_dump($md->getName()); // dump the full class names
+            var_dump($md->getTableName()); // dump the table names*/
+            $entity_list[] = $md->getTableName();
+        }
+        $target_entity = array_pop($name_pairs);
+        $entity_exist = in_array($target_entity, $entity_list);
+        if(!$entity_exist){
+            foreach($entity_list as $key => $value){
+                $entity_list[$key] = $request->query->get('selectedCG', 'parameters').'-'.$value;
+            }
+            if(!in_array($target_entity, $entity_list)){
+                return new Response(fread($dfile_not_found_handler, 1000));
+            }
+        }
+        return new Response('Selected element is: '.$request->query->get('id', 'parameters'));
     }
 
     public function disposeController($router_collection, $actual_path, $request, $user){

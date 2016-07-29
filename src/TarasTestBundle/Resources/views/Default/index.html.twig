@@ -24,6 +24,16 @@
                     },
                     'plugins' : ['dnd', 'contextmenu'],
                 });
+                $('#tree_container').on("changed.jstree", function(e, data){
+                    $.ajax({
+                        url: '/getnodedescription?',
+                        data: {'id': data.instance.get_selected(true)[0].id, 'isleaf': data.instance.is_leaf(data.instance.get_selected(true)[0]), 'selectedCG': $("#selectedCG option:selected").val()},
+                        success: function(rdata){
+                            //alert('I have received this: '+ rdata);
+                            document.getElementById('mainContent').innerHTML = rdata;
+                        }
+                    });
+                });
             });
         </script>
     </div>
