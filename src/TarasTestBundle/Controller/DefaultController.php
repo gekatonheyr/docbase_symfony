@@ -256,6 +256,11 @@ class DefaultController extends Controller
                 return new Response(fread($dfile_not_found_handler, 1000));
             }
         }
+        $evm = $em->getEventManager();
+        $evm->addEventSubscriber(new DinamicDoctrineSubscriber());
+        $target_table = $request->query->get('selectedCG', 'parameters').'-'.$target_entity;
+        $table_repo = $em->getRepository('TarasTestBundle:'.$request->query->get('selectedCG', 'parameters').'-'.$target_entity);
+        $data_list_tmp = $table_repo->findAll();
         return new Response('Selected element is: '.$request->query->get('id', 'parameters'));
     }
 

@@ -17,16 +17,23 @@
     <body>
         <div class="page-header">
             <div class="container">
-                <center><h1 id="companyGroupName"></h1></center>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                         Choose CG name<span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        {% block companyGroupName %}{% endblock %}
-                    </ul>
+                <center><h1 id="companyGroupName">
+                        <div>
+                            <h1>Добро пожаловать в систему систем!!!</h1>
+                        </div>
+                    </h1></center>
+                <div class="col-xs-3">
+                        <select required class="form-control btn-primary" id="selectedCG" name="selectedCG">
+                            <option value="" disabled selected hidden>Please Choose CG...</option>
+                            {% for key, company in holdingGroupsList %}
+                                <option value="{{ key }}"> {{ company }} </option>
+                            {% endfor %}
+                        </select>
                 </div>
-                <p>Cite of the wise man</p>
+
+                <div class="col-xs-9">
+                    <h5>Цитата сеанса:</h5> {{ currentCite }}
+                </div>
             </div>
         </div>
 
@@ -47,12 +54,10 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="list-group">
-                        {% block sideBarTree %}{% endblock %}
-                    </div>
+                <div class="col-md-4" id="sideBarTree">
+                    {% block sideBarTree %}{% endblock %}
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-8" id="mainContent">
                     {% block mainContent %}{% endblock %}
                 </div>
             </div>
