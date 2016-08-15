@@ -31,12 +31,14 @@ class DinamicDoctrineSubscriber implements EventSubscriber
         $class_name = $eventArgs->getClassName();
         $om = $eventArgs->getObjectManager();
 
-        $name_parts = explode('-', $class_name);
+
+        $found_class_name = array_pop(explode('\\', $class_name));
+        $name_parts = explode('-', $found_class_name);
         foreach($om->getMetadataFactory()->getAllMetadata() as $md){
             if($md->getTableName()==$name_parts[1]){
                 $tmp = ucfirst($name_parts[1]);
                 $foundMetadata = $om->getClassMetadata('TarasTestBundle:'.$tmp);
-                $foundMetadata->setTableName('`akkalita-'.$name_parts[1].'`');
+                $foundMetadata->setTableName('`'.$name_parts[0].'-'.$name_parts[1].'`');
                 return $eventArgs->setFoundMetadata($foundMetadata);
             }
         }

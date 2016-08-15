@@ -3,6 +3,7 @@
 namespace TarasTestBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use TarasTestBundle\Entity\Contractor;
 
 /**
  * Agreement_reg
@@ -27,6 +28,14 @@ class Agreement_reg
      * @ORM\Column(name="contractor_id", type="integer")
      */
     private $contractorId;
+
+    /**
+     * @var Contractor
+     *
+     * @ORM\ManyToOne(targetEntity="Contractor")
+     * @ORM\JoinColumn(name="contractor_id", referencedColumnName="id")
+     */
+    private $contractor;
 
     /**
      * @var \DateTime
@@ -96,6 +105,26 @@ class Agreement_reg
     public function getContractorId()
     {
         return $this->contractorId;
+    }
+
+    /**
+     * @return Contractor
+     */
+    public function getContractor()
+    {
+        return $this->contractor;
+    }
+
+    /**
+     * @param Contractor $contractor
+     *
+     * @return Agreement_reg
+     */
+    public function setContractor($contractor)
+    {
+        $this->contractor = $contractor;
+
+        return $this;
     }
 
     /**

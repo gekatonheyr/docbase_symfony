@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use TarasTestBundle\Form\LoginForm;
 use TarasTestBundle\EventSubscribers\DinamicDoctrineSubscriber;
-use TarasTestBundle\EventListeners\DinamicDoctrineListeners;
 
 class DefaultController extends Controller
 {
@@ -261,6 +260,7 @@ class DefaultController extends Controller
         $target_table = $request->query->get('selectedCG', 'parameters').'-'.$target_entity;
         $table_repo = $em->getRepository('TarasTestBundle:'.$request->query->get('selectedCG', 'parameters').'-'.$target_entity);
         $data_list_tmp = $table_repo->findAll();
+        $tmp = $data_list_tmp[0]->getContractor()->getTitle();
         return new Response('Selected element is: '.$request->query->get('id', 'parameters'));
     }
 
