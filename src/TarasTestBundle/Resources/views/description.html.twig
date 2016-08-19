@@ -1,0 +1,48 @@
+<table class="table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th class="text-center">Reg number</th>
+            <th class="text-center">Contractor</th>
+            <th class="text-center">Subject</th>
+            <th class="text-center">Conclusion date</th>
+            <th class="text-center">Completion date</th>
+            {% if curGroup == userGroupName %}
+                <th class="text-center">Actions</th>
+            {% endif %}
+        </tr>
+    </thead>
+    {% set i = 1 %}
+    {% for line in content %}
+        <tr>
+            <td>
+                {{ i }}
+            </td>
+            <td class="text-center">
+                {{ line.regNumber }}
+            </td>
+            <td>
+                {{ line.contractor.orgForm }}
+                "{{ line.contractor.title }}"
+            </td>
+            <td>
+                {{ line.agreementSubject }}
+            </td>
+            <td>
+                {{ line.conclusionDate|date("d.m.Y") }}
+            </td>
+
+            <td>
+                {{ line.completionDate|date("d.m.Y") }}
+            </td>
+            {% if curGroup == userGroupName %}
+                <td>
+                    <button type="button" class="btn btn-warning btn-xs">Edit</button>
+                    <button type="button" class="btn btn-danger btn-xs">Delete</button>
+                </td>
+            {% endif %}
+        </tr>
+        {% set i = i+1 %}
+    {% endfor %}
+
+</table>

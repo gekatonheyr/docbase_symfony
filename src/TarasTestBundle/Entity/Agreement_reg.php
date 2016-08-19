@@ -3,7 +3,6 @@
 namespace TarasTestBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use TarasTestBundle\Entity\Contractor;
 
 /**
  * Agreement_reg
@@ -21,6 +20,13 @@ class Agreement_reg
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="reg_number", type="string", length=255)
+     */
+    private $regNumber;
 
     /**
      * @var int
@@ -246,5 +252,28 @@ class Agreement_reg
     {
         return $this->scanPath;
     }
-}
 
+    /**
+     * Set regNumber
+     *
+     * @param string $regNumber
+     *
+     * @return Agreement_reg
+     */
+    public function setRegNumber($regNumber)
+    {
+        $this->regNumber = $regNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get regNumber
+     *
+     * @return string
+     */
+    public function getRegNumber()
+    {
+        return $this->regNumber;
+    }
+}

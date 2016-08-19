@@ -50,6 +50,14 @@ class User
     private $groupId;
 
     /**
+     * @var Contractor
+     *
+     * @ORM\ManyToOne(targetEntity="TarasTestBundle\Entity\Groups")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     */
+    private $group;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="groups_id", type="integer", nullable=true)
@@ -270,6 +278,27 @@ class User
     public function getAccessId()
     {
         return $this->accessId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * Set Group
+     *
+     * @param mixed $group
+     *
+     * @return User
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
+        return $this;
     }
 
     public function generateSalt($em)

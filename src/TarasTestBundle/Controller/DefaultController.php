@@ -260,8 +260,12 @@ class DefaultController extends Controller
         $target_table = $request->query->get('selectedCG', 'parameters').'-'.$target_entity;
         $table_repo = $em->getRepository('TarasTestBundle:'.$request->query->get('selectedCG', 'parameters').'-'.$target_entity);
         $data_list_tmp = $table_repo->findAll();
-        $tmp = $data_list_tmp[0]->getContractor()->getTitle();
-        return new Response('Selected element is: '.$request->query->get('id', 'parameters'));
+        $cur_user_grp = $user->GetGroup()->getGroupName();
+
+
+        return $this->render('TarasTestBundle::description.html.twig', array('curGroup' => array_keys($name_pairs)[0],
+                                        'userGroupName' => $cur_user_grp,
+                                        'content' => $data_list_tmp));
     }
 
     public function disposeController($router_collection, $actual_path, $request, $user){
