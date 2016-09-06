@@ -257,11 +257,10 @@ class DefaultController extends Controller
         }
         $evm = $em->getEventManager();
         $evm->addEventSubscriber(new DinamicDoctrineSubscriber());
-        $target_table = $request->query->get('selectedCG', 'parameters').'-'.$target_entity;
+        //$target_table = $request->query->get('selectedCG', 'parameters').'-'.$target_entity;
         $table_repo = $em->getRepository('TarasTestBundle:'.$request->query->get('selectedCG', 'parameters').'-'.$target_entity);
         $data_list_tmp = $table_repo->findAll();
         $cur_user_grp = $user->GetGroup()->getGroupName();
-
 
         return $this->render('TarasTestBundle::description.html.twig', array('curGroup' => array_keys($name_pairs)[0],
                                         'userGroupName' => $cur_user_grp,

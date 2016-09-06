@@ -15,7 +15,7 @@ class DocViewForm extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-
+        $resolver->setDefaults(array('data_class' => 'TarasTestBundle\Entity\Agreement_reg'));
     }
 
     public function getName()
